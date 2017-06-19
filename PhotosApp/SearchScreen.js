@@ -8,10 +8,8 @@ import {
     ActivityIndicator,
     Image
 } from 'react-native';
+import { executeFetchRequest, urlForSearchtext } from './DataManager';
 const ResultsScreen = require('./ResultsScreen');
-
-const apiKey = 'a6d819499131071f158fd740860a5a88';
-const baseURLString = 'https://api.flickr.com/services/rest';
 
 
 class SearchScreen extends Component {
@@ -19,38 +17,15 @@ class SearchScreen extends Component {
         super(props);
         this.state = { searchText: 'Summer' };
     }
-    _handleResponse(json) {
-        if (json.stat === 'ok'){
+    _onPressSearch() {
+        const url = urlForSearchtext(this.state.searchText);
+        executeFetchRequest(url, (photos) => {
             this.props.navigator.push ({
                 title: this.state.searchText + ' Photos',
                 component: ResultsScreen,
-                passProps: {photos: json.photos.photo}
-            })
-        }
-    }
-    _executeFetchRequest(url) {
-        fetch(url)
-            .then(response => response.json())
-            .then(json => this._handleResponse(json))
-            .catch(error => console.log(error));
-    }
-    _constructURL(searchText) {
-        const params = {
-            api_key: apiKey,
-            method: 'flickr.photos.search',
-            text: searchText,
-            extras: 'url_m',
-            format: 'json',
-            nojsoncallback: '1'
-        };
-        const queryString = Object.keys(params)
-            .map(key => key + '=' + encodeURIComponent(params[key]))
-            .join('&');
-        return baseURLString + '?' + queryString
-    }
-    _onPressSearch() {
-        const url = this._constructURL(this.state.searchText);
-        this._executeFetchRequest(url);
+                passProps: {photos: photos}
+            });
+        });
     }
     render() {
         return (
