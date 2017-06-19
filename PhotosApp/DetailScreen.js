@@ -10,9 +10,16 @@ import {
 class DetailScreen extends Component {
     render() {
         return (
-            <Text>{this.props.photo.title}</Text>
+            <Image style={styles.root} source={{ uri: this.props.photo.url_m }}>
+
+            </Image>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    root: { flex: 1, width: undefined, height: undefined }
+})
+
 
 module.exports = DetailScreen;
