@@ -22,7 +22,7 @@ class SearchScreen extends Component {
     _handleResponse(json) {
         if (json.stat === 'ok'){
             this.props.navigator.push ({
-                title: 'Search Result',
+                title: this.state.searchText + ' Photos',
                 component: ResultsScreen,
                 passProps: {photos: json.photos.photo}
             })
@@ -35,7 +35,7 @@ class SearchScreen extends Component {
             .catch(error => console.log(error));
     }
     _constructURL(searchText) {
-        var params = {
+        const params = {
             api_key: apiKey,
             method: 'flickr.photos.search',
             text: searchText,
@@ -43,13 +43,13 @@ class SearchScreen extends Component {
             format: 'json',
             nojsoncallback: '1'
         };
-        var queryString = Object.keys(params)
+        const queryString = Object.keys(params)
             .map(key => key + '=' + encodeURIComponent(params[key]))
             .join('&');
         return baseURLString + '?' + queryString
     }
     _onPressSearch() {
-        var url = this._constructURL(this.state.searchText);
+        const url = this._constructURL(this.state.searchText);
         this._executeFetchRequest(url);
     }
     render() {
