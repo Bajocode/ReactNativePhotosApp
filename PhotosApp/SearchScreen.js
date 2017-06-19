@@ -8,6 +8,8 @@ import {
     ActivityIndicator,
     Image
 } from 'react-native';
+const ResultsScreen = require('./ResultsScreen');
+
 const apiKey = 'a6d819499131071f158fd740860a5a88';
 const baseURLString = 'https://api.flickr.com/services/rest';
 
@@ -16,6 +18,21 @@ class SearchScreen extends Component {
     constructor(props) {
         super(props);
         this.state = { searchText: 'Summer' };
+    }
+    _handleResponse(json) {
+        if (json.stat === 'ok'){
+            this.props.navigator.push ({
+                title: 'Search Result',
+                component: ResultsScreen,
+                passProps: {photos: json.photos.photo}
+            })
+        }
+    }
+    _executeFetchRequest(url) {
+        fetch(url)
+            .then(response => response.json())
+            .then(json => this._handleResponse(json))
+            .catch(error => console.log(error));
     }
     _constructURL(searchText) {
         var params = {
@@ -30,14 +47,6 @@ class SearchScreen extends Component {
             .map(key => key + '=' + encodeURIComponent(params[key]))
             .join('&');
         return baseURLString + '?' + queryString
-    }
-    _executeFetchRequest(url) {
-        fetch(url)
-            .then(response => {
-                response.json();
-                console.log(response);
-            })
-            .catch(error => console.log(error));
     }
     _onPressSearch() {
         var url = this._constructURL(this.state.searchText);
