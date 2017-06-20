@@ -5,7 +5,7 @@ import {
     View,
     Text
 } from 'react-native'
-import { executeFetchRequest } from './DataManager';
+import { executeFetchRequest } from '../DataManager';
 
 
 class DetailScreen extends Component {

@@ -10,7 +10,7 @@ import {
     ListView,
     TouchableHighlight
 } from 'react-native';
-import { executeFetchRequest, urlForSearchtext, urlForInteresting } from './DataManager';
+import { executeFetchRequest, urlForSearchtext, urlForInteresting } from '../DataManager';
 const ResultsScreen = require('./ResultsScreen');
 const DetailScreen = require('./DetailScreen');
 
