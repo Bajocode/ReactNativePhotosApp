@@ -11,7 +11,8 @@ import { executeFetchRequest } from './DataManager';
 class DetailScreen extends Component {
     render() {
         return (
-            <Image style={styles.root} source={{ uri: this.props.photo.url_h }}>
+            <Image style={styles.root}
+            source={{ uri: this.props.photo.url_h ? this.props.photo.url_h : this.props.photo.url_m }}>
 
             </Image>
         );

@@ -8,7 +8,8 @@ class PhotosApp extends Component {
             <NavigatorIOS
                 initialRoute={{
                     component: SearchScreen,
-                    title: 'Search Photo'
+                    title: 'Search Photo',
+                    navigationBarHidden: true
                 }}
                 style={styles.root}
             />
