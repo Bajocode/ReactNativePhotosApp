@@ -50,6 +50,7 @@ class ResultsScreen extends Component {
                 <ListView
                     dataSource={this.state.dataSource}
                     renderRow={this._renderRow.bind(this)}
+                    enableEmptySections={true}
                 />
             </View>
         );

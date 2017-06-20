@@ -7,11 +7,12 @@ import {
     Button,
     ActivityIndicator,
     Image,
-    ListView
+    ListView,
+    TouchableHighlight
 } from 'react-native';
 import { executeFetchRequest, urlForSearchtext, urlForInteresting } from './DataManager';
 const ResultsScreen = require('./ResultsScreen');
-
+const DetailScreen = require('./DetailScreen');
 
 class SearchScreen extends Component {
     constructor(props) {
@@ -35,6 +36,13 @@ class SearchScreen extends Component {
             });
         });
     }
+    _onPressRow(selectedPhoto) {
+        this.props.navigator.push({
+            title: photo.title,
+            component: DetailScreen,
+            passProps: { photo: selectedPhoto }
+        });
+    }
 
     // Lifecycle
     componentDidMount() {
@@ -51,27 +59,30 @@ class SearchScreen extends Component {
     }
     _renderRow(rowData, sectionID, rowID) {
         return (
-            <View style={styles.rowContainer}>
-                <Image style={styles.rowImage}
-                    source={{ uri: rowData.url_m }}>
-                </Image>
-            </View>
+            <TouchableHighlight underlayColor='transparent'
+            onPress={() => this._onPressRow(rowData)}>
+                <View style={styles.rowContainer}>
+                    <Image style={styles.rowImage}
+                        source={{ uri: rowData.url_m }}>
+                    </Image>
+                </View>
+            </TouchableHighlight>
         );
     }
     render() {
         return (
             <View style={styles.root}>
                 <View style={styles.topContainer}>
-                    <View style={styles.searchRow}>
-                        <TextInput style={styles.textInput}
-                            placeholder='Search by keyword'
-                            onChangeText={(searchText) => this.setState({searchText})}
-                        />
-                        <Button
-                            title="Go"
-                            onPress={this._onPressSearch.bind(this)}
-                        />
-                    </View>
+                    <Text style={styles.screenTitle}>Search</Text>
+                    <TextInput style={styles.textInput}
+                        placeholder='"Anything"'
+                        onChangeText={(searchText) => this.setState({searchText})}
+                    />
+                    <TouchableHighlight style={styles.searchButton}
+                        onPress={this._onPressSearch.bind(this)}
+                        underlayColor='#007AFF'>
+                        <Text style={styles.buttonText}>GO</Text>
+                    </TouchableHighlight>
                 </View>
                 <View style={styles.bottomContainer}>
                     <View style={styles.listContainer}>
@@ -81,6 +92,7 @@ class SearchScreen extends Component {
                             renderRow={this._renderRow.bind(this)}
                             horizontal={true}
                             automaticallyAdjustContentInsets={false}
+                            enableEmptySections={true}
                         />
                     </View>
                 </View>
@@ -91,31 +103,76 @@ class SearchScreen extends Component {
 
 
 const styles = StyleSheet.create({
-    root: { marginTop: 64, flex: 1 },
-        topContainer: { flex: 2, alignItems:'center' },
-            searchRow: { flexDirection: 'row' },
-                textInput: { height: 44, flex: 4 },
-                searchButton: { flex: 1 },
-        bottomContainer: { flex: 2, paddingRight: 10 },
-            listContainer: { flex: 1 },
-                imagesTitle: {
-                    fontSize: 20,
-                    fontFamily: 'helvetica',
-                    fontWeight: 'bold',
-                    color: '#4A4A4A',
-                    paddingLeft: 10,
-                    paddingBottom: 10
-                },
-                rowContainer: {
-                    flex: 5,
-                    backgroundColor:'transparent',
-                    paddingLeft: 10, paddingTop: 10, paddingBottom: 10
-                },
-                    rowImage: {
-                        flex: 1,
-                        height: undefined, width: 320,
-                        borderRadius: 10
-                    },
+    root: {
+        flex: 1,
+        alignItems: 'center' ,
+    },
+    topContainer: {
+        margin: 10,
+        borderRadius: 10,
+        flex: 2,
+        alignSelf: 'stretch',
+        justifyContent: 'center',
+        marginBottom: 20
+    },
+    screenTitle: {
+        fontSize: 50,
+        fontFamily: 'helvetica',
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        textAlign: 'center',
+        color: '#4A4A4A',
+    },
+    textInput: {
+        fontSize: 30,
+        fontFamily: 'helvetica',
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        textAlign: 'center',
+        color: '#007AFF',
+        marginTop: 30,
+        height: 64, width: 300
+    },
+    searchButton: {
+        marginTop: 15,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#007AFF',
+        borderRadius: 20,
+        height: 64, width: 64
+    },
+    buttonText: {
+        fontSize: 24,
+        fontFamily: 'helvetica',
+        fontWeight: 'bold',
+        color: '#FFF',
+        textAlign: 'center',
+    },
+    bottomContainer: {
+        flex: 2,
+        paddingRight: 10
+    },
+    listContainer: {
+        flex: 1
+    },
+    imagesTitle: {
+        fontSize: 20,
+        fontFamily: 'helvetica',
+        fontWeight: 'bold',
+        color: '#4A4A4A',
+        paddingLeft: 10,
+        paddingBottom: 10
+    },
+    rowContainer: {
+        flex: 5,
+        backgroundColor:'transparent',
+        paddingLeft: 10, paddingTop: 10, paddingBottom: 10
+    },
+    rowImage: {
+        flex: 1,
+        height: undefined, width: 320,
+        borderRadius: 10
+    },
 })
 
 
