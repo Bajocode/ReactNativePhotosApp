@@ -1,6 +1,6 @@
 # React Native Photos App
 
-![Screenshots of the app](media/Header.png)
+![Screenshots of the app](media/header.png)
 
 #### Project
 For my first React Native project, I've created an iOS only photo searching app, using the Flickr REST api.
