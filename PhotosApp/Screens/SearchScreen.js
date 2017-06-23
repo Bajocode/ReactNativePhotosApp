@@ -14,6 +14,7 @@ import { executeFetchRequest, urlForSearchtext, urlForInteresting } from '../Dat
 const ResultsScreen = require('./ResultsScreen');
 const DetailScreen = require('./DetailScreen');
 
+
 class SearchScreen extends Component {
     constructor(props) {
         super(props);
@@ -22,13 +23,18 @@ class SearchScreen extends Component {
         );
         this.state = {
             searchText: 'Summer',
-            isLoading: true,
-            dataSource: dataSource.cloneWithRows([])
+            isLoading: false,
+            dataSource: dataSource.cloneWithRows([]),
+            photos: []
         };
     }
+
+    // Event handlers
     _onPressSearch() {
         const url = urlForSearchtext(this.state.searchText);
+        this.setState({ isLoading: true });
         executeFetchRequest(url, (photos) => {
+            this.setState({ isLoading: false });
             this.props.navigator.push ({
                 title: this.state.searchText + ' Photos',
                 component: ResultsScreen,
@@ -37,10 +43,11 @@ class SearchScreen extends Component {
         });
     }
     _onPressRow(selectedPhoto) {
+        const photo = this.state.photos.filter(photo => photo === selectedPhoto)[0]
         this.props.navigator.push({
             title: photo.title,
             component: DetailScreen,
-            passProps: { photo: selectedPhoto }
+            passProps: { photo: photo }
         });
     }
 
@@ -53,7 +60,8 @@ class SearchScreen extends Component {
             );
             this.setState({
                 isLoading: false,
-                dataSource: dataSource.cloneWithRows(photos)
+                dataSource: dataSource.cloneWithRows(photos),
+                photos: photos
             });
         });
     }
@@ -70,6 +78,7 @@ class SearchScreen extends Component {
         );
     }
     render() {
+        const spinner = this.state.isLoading ? (<ActivityIndicator size='large'/>) : (<View/>);
         return (
             <View style={styles.root}>
                 <View style={styles.topContainer}>
@@ -78,11 +87,13 @@ class SearchScreen extends Component {
                         placeholder='"Anything"'
                         onChangeText={(searchText) => this.setState({searchText})}
                     />
+                    {spinner}
                     <TouchableHighlight style={styles.searchButton}
                         onPress={this._onPressSearch.bind(this)}
                         underlayColor='#007AFF'>
                         <Text style={styles.buttonText}>GO</Text>
                     </TouchableHighlight>
+
                 </View>
                 <View style={styles.bottomContainer}>
                     <View style={styles.listContainer}>
@@ -102,6 +113,7 @@ class SearchScreen extends Component {
 }
 
 
+// Styles
 const styles = StyleSheet.create({
     root: {
         flex: 1,
@@ -134,7 +146,7 @@ const styles = StyleSheet.create({
         height: 64, width: 300
     },
     searchButton: {
-        marginTop: 15,
+        marginTop: 20,
         alignSelf: 'center',
         justifyContent: 'center',
         backgroundColor: '#007AFF',
@@ -169,11 +181,11 @@ const styles = StyleSheet.create({
         paddingLeft: 10, paddingTop: 10, paddingBottom: 10
     },
     rowImage: {
+        backgroundColor: 'rgba(0,0,0,.3)',
         flex: 1,
         height: undefined, width: 320,
         borderRadius: 10
     },
 })
-
 
 module.exports = SearchScreen;
